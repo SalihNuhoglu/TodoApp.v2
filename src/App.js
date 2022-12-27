@@ -4,6 +4,11 @@ function App() {
 
   const [todoText, setTodoText] = useState("");
   const [todos, setTodos] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+
+  const editTodo = (id) => {
+    setIsEdit(true);
+  }
 
   const changeIsDone = (id) => {
     const searchedTodo = todos.find((item) => item.id === id);
@@ -21,8 +26,8 @@ function App() {
       alert("Todo text can't be empty!")
       return;
     }
-    const hasTodos=todos.find((item) => item.text === todoText);
-    if(hasTodos !== undefined) {
+    const hasTodos = todos.find((item) => item.text === todoText);
+    if (hasTodos !== undefined) {
       alert("You have the todo already");
       return;
     }
@@ -34,7 +39,7 @@ function App() {
       date: new Date(),
     };
     setTodos([newTodo, ...todos]);
-    console.log(newTodo);
+    setTodoText("");
   }
 
   return (
@@ -63,9 +68,22 @@ function App() {
           <>
             {
               todos.map(item => (
-                <div class="alert alert-secondary d-flex justify-content-between align-items-center" role="alert">
+                <div class={`alert alert-${
+                  item.isDone === true ? "success" : "secondary"
+                  } d-flex justify-content-between align-items-center`}
+                  >
                   <p>{item.text}</p>
-                  <button onClick={() => changeIsDone(item.id)} className="btn btn-sm btn-secondary">{item.isDone === false ? "Done" : "Undone"}</button>
+                  <div>
+                    <button
+                      className="btn btn-sm btn-success mx-1"
+                      onClick={() => editTodo(item.id)}>
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => changeIsDone(item.id)}
+                      className="btn btn-sm btn-secondary">{item.isDone === false ? "Done" : "Undone"}
+                    </button>
+                  </div>
                 </div>
               ))
             }
